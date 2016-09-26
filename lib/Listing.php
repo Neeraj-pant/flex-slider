@@ -1,5 +1,7 @@
 <?php
 
+
+
 if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -31,8 +33,8 @@ class Listing extends WP_List_Table
                 
         //Set parent defaults
         parent::__construct( array(
-            'singular'  => 'movie',     //singular name of the listed records
-            'plural'    => 'movies',    //plural name of the listed records
+            'singular'  => 'slider',     //singular name of the listed records
+            'plural'    => 'sliders',    //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
 
@@ -64,8 +66,8 @@ class Listing extends WP_List_Table
      **************************************************************************/
     function column_default($item, $column_name){
         switch($column_name){
-            case 'rating':
-            case 'director':
+            case 'total_slides':
+            case 'type':
                 return $item[$column_name];
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -93,8 +95,8 @@ class Listing extends WP_List_Table
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&movie=%s">Edit</a>',$_REQUEST['page'],'edit',$item['ID']),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&movie=%s">Delete</a>',$_REQUEST['page'],'delete',$item['ID']),
+            'edit'      => sprintf('<a href="?page=%s&action=%s&slider=%s">Edit</a>',$_REQUEST['page'],'edit',$item['ID']),
+            'delete'    => sprintf('<a href="?page=%s&action=%s&slider=%s">Delete</a>',$_REQUEST['page'],'delete',$item['ID']),
         );
         
         //Return the title contents
@@ -139,10 +141,10 @@ class Listing extends WP_List_Table
      **************************************************************************/
     function get_columns(){
         $columns = array(
-            'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
-            'title'     => 'Title',
-            'rating'    => 'Rating',
-            'director'  => 'Director'
+            'cb'            => '<input type="checkbox" />', //Render a checkbox instead of text
+            'title'         => 'Title',
+            'total_slides'  => 'Total Slides',
+            'type'          => 'Type'
         );
         return $columns;
     }
@@ -164,9 +166,9 @@ class Listing extends WP_List_Table
      **************************************************************************/
     function get_sortable_columns() {
         $sortable_columns = array(
-            'title'     => array('title',false),     //true means it's already sorted
-            'rating'    => array('rating',false),
-            'director'  => array('director',false)
+            'title'         => array('title',true),     //true means it's already sorted
+            'total_slides'  => array('total_slides',false),
+            'type'          => array('type',false)
         );
         return $sortable_columns;
     }
@@ -232,7 +234,7 @@ class Listing extends WP_List_Table
         /**
          * First, lets decide how many records per page to show
          */
-        $per_page = 5;
+        $per_page = 10;
         
         
         /**

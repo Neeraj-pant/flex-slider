@@ -1,6 +1,7 @@
 <?php
 
-
+// namespace FlexSlider\Lib\Listing;
+// use FlexSlider;
 
 if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
@@ -67,8 +68,8 @@ class Listing extends WP_List_Table
     function column_default($item, $column_name){
         switch($column_name){
             case 'total_slides':
-            case 'type':
-                return $item[$column_name];
+            case 'slider_type':
+                return $item->$column_name;
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
         }
@@ -95,14 +96,14 @@ class Listing extends WP_List_Table
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&slider=%s">Edit</a>',$_REQUEST['page'],'edit',$item['ID']),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&slider=%s">Delete</a>',$_REQUEST['page'],'delete',$item['ID']),
+            'edit'      => sprintf('<a href="?page=%s&action=%s&slider=%s">Edit</a>',$_REQUEST['page'],'edit',$item->slider_id),
+            'delete'    => sprintf('<a href="?page=%s&action=%s&slider=%s">Delete</a>',$_REQUEST['page'],'delete',$item->slider_id),
         );
         
         //Return the title contents
         return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
-            /*$1%s*/ $item['title'],
-            /*$2%s*/ $item['ID'],
+            /*$1%s*/ $item->slider_name,
+            /*$2%s*/ $item->slider_id,
             /*$3%s*/ $this->row_actions($actions)
         );
     }
@@ -121,7 +122,7 @@ class Listing extends WP_List_Table
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
             /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
-            /*$2%s*/ $item['ID']                //The value of the checkbox should be the record's id
+            /*$2%s*/ $item->slider_id               //The value of the checkbox should be the record's id
         );
     }
 
@@ -141,10 +142,10 @@ class Listing extends WP_List_Table
      **************************************************************************/
     function get_columns(){
         $columns = array(
-            'cb'            => '<input type="checkbox" />', //Render a checkbox instead of text
-            'title'         => 'Title',
-            'total_slides'  => 'Total Slides',
-            'type'          => 'Type'
+            'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
+            'title'             => 'Title',
+            'total_slides'      => 'Total Slides',
+            'slider_type'       => 'Type'
         );
         return $columns;
     }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace FledSlider;
+// namespace FlexSlider\Lib\Classes;
 
 /**
  * Install bd and init classes
@@ -17,7 +17,7 @@ class InstallDB {
     * Create DB Tables if not exists
     */
     private function initTables(){
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
 
@@ -25,7 +25,8 @@ class InstallDB {
             'slider_table' => " "
                 ." CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."fl_sliders ( "
                 ." slider_id INT NOT NULL AUTO_INCREMENT, "
-                ." slider_name varchar(55) NOT NULL,"
+                ." slider_name varchar(255) NOT NULL,"
+                ." slider_type varchar(255) NOT NULL,"
                 ." slider_status INT NOT NULL DEFAULT 1,"
                 ." created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
                 ." modified_on TIMESTAMP NOT NULL,"
@@ -35,7 +36,7 @@ class InstallDB {
                 ." CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."fl_slider_slides ( "
                 ." slide_id INT NOT NULL AUTO_INCREMENT, "
                 ." slider_id INT NOT NULL, "
-                ." slider_media_id varchar(55) NOT NULL,"
+                ." slider_media_id varchar(255) NOT NULL,"
                 ." created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
                 ." modified_on TIMESTAMP NOT NULL,"
                 ." PRIMARY KEY (slide_id)"
@@ -44,7 +45,7 @@ class InstallDB {
                 ." CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."fl_slider_meta ( "
                 ." meta_id INT NOT NULL AUTO_INCREMENT, "
                 ." slider_id INT NOT NULL, "
-                ." slider_meta_name varchar(55) NOT NULL,"
+                ." slider_meta_name varchar(255) NOT NULL,"
                 ." slider_meta_value varchar(255) NOT NULL,"
                 ." created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
                 ." modified_on TIMESTAMP NOT NULL,"

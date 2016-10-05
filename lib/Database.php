@@ -6,7 +6,7 @@
 * @author Neeraj Pant
 */
 
-namespace FledSlider;
+// namespace FlexSlider\lib;
 
 class Database{
 
@@ -19,7 +19,7 @@ class Database{
 	public function __construct(){
 		global $wpdb;
 
-		$this->wpdb = clone $wpdb;
+		$this->wpdb = $wpdb;
 		$this->table_sliders = $this->wpdb->prefix.'fl_sliders';
 		$this->table_slider_slides = $this->wpdb->prefix.'fl_slider_slides';
 		$this->table_slide_meta = $this->wpdb->prefix.'fl_slider_meta';
@@ -30,7 +30,12 @@ class Database{
 	* Gets All Active Sliders
 	*/
 	public function getAllSliders(){
-		$results = $this->wpdb->get_results( 'SELECT * FROM '.$this->table_sliders.' WHERE slider_status = 1' );
+		$query = 'SELECT s.*, ss.total_slides FROM '.$this->table_sliders.' as s '
+				.' LEFT JOIN ( '
+					.' SELECT count(*) as total_slides, slider_id FROM '.$this->table_slider_slides.' GROUP BY slider_id '
+					.' ) as ss on ss.slider_id = s.slider_id '
+				.' WHERE s.slider_status = 1 ';
+		$results = $this->wpdb->get_results( $query );
 		return $results;
 	}
 

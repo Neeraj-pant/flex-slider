@@ -92,6 +92,7 @@ class FlexSlider
 	{
 		require_once(plugin_dir_path( __FILE__ ).'templates/add_slider.php');
 	}
+
 }
 
 

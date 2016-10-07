@@ -20,12 +20,23 @@ class FlexSlider
 
 	function __construct()
 	{
+        add_action('admin_init', array($this, 'fsInit'));
         register_activation_hook( __FILE__, array($this,'fsInstallDB') );
-		add_action('admin_menu', array($this, 'fsIncludeLib'));
-		add_action('admin_menu', array($this, 'fsInitDBObj'));
+		add_action('admin_init', array($this, 'fsIncludeLib'));
+		add_action('admin_init', array($this, 'fsInitDBObj'));
 		add_action('admin_menu', array($this, 'fsCreateMenuItems'));
-	}
+        add_action('admin_enqueue_scripts', array($this, 'fsIncludeStyleSheet'));
+    }
 
+
+    /*
+     * Initilize Slider Configuration
+     */
+    public function fsInit()
+    {
+        defined('FLEX_VERSION')     OR define('FLEX_VERSION', 1.0);
+        defined('FLEX_DIR_NAME')    OR define('FLEX_DIR_NAME', basename(__DIR__) );
+    }
 
    /**
    * Initialize or create DB tables
@@ -65,10 +76,6 @@ class FlexSlider
 	public function fsSliderListing()
 	{
 		$sliders = $this->database->getAllSliders();
-		// echo "<pre>";
-		// print_r($sliders);
-		// echo "</pre>";
-
 
 	    $testListTable = new Listing($sliders);
 	    $testListTable->prepare_items();
@@ -85,6 +92,7 @@ class FlexSlider
 	}
 
 
+
 	/*
 	* Add Slides Admin Menu Page
 	*/
@@ -93,8 +101,36 @@ class FlexSlider
 		require_once(plugin_dir_path( __FILE__ ).'templates/add_slider.php');
 	}
 
+
+
+	/*
+	 * Include StyleSheets
+	 */
+	public function fsIncludeStyleSheet( $hook )
+	{
+        wp_register_style('flex-slider-style', plugins_url(FLEX_DIR_NAME.'/css/slider_base.css'), false, FLEX_VERSION);
+        wp_enqueue_style('flex-slider-style');
+//        wp_register_style('flex-jquery-ui', plugins_url(FLEX_DIR_NAME.'/css/jquery-ui.min.css'), false, FLEX_VERSION);
+//        wp_enqueue_style('flex-jquery-ui');
+//
+//        wp_enqueue_script('flex-jquery-ui-js', plugins_url(FLEX_DIR_NAME.'/js/jquery-ui.min.js'));
+	}
+
 }
 
 
 $plg = new FlexSlider();
 
+
+function dd($data){
+     echo "<pre>";
+     print_r($data);
+     echo "</pre>";
+    die;
+}
+
+function d($data){
+    echo "<pre>";
+    print_r($data);
+    echo "</pre>";
+}

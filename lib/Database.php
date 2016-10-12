@@ -39,4 +39,56 @@ class Database{
 		return $results;
 	}
 
+
+	/**
+	* Save Slider
+	*
+	* @param array 				$slider		Array of slider name and type
+	* @return integer|boolean 				Return slider id on success or false
+	*/
+	public function saveSlider($slider)
+	{
+		$this->wpdb->insert( $this->table_sliders, $slider );
+		return $this->wpdb->insert_id;
+	}
+
+
+
+
+	/**
+	 * Save Slider Slides
+	 *
+	 * @param array		$slides		Array of slides
+	 * @param integer	$slider_id	Slider Id for reference slides to slider
+	 * @return boolean				return true or false
+	 */
+	public function saveSlides($slides, $slider_id)
+    {
+        $error = false;
+        foreach($slides as $slide)
+        {
+            if(empty($slide))
+            {
+                $slide = 0;
+            }
+            $slide_data = array (
+                'slider_id'     => $slider_id,
+                'slider_media_id'  => $slide
+            );
+            $res = $this->wpdb->insert( $this->table_slider_slides, $slide_data, array('%d', '%d') );
+            if(!$res)
+            {
+                $error = true;
+            }
+        }
+        if($error)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 } 

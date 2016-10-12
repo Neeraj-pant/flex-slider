@@ -36,7 +36,7 @@ class InstallDB {
                 ." CREATE TABLE IF NOT EXISTS ".$wpdb->prefix."fl_slider_slides ( "
                 ." slide_id INT NOT NULL AUTO_INCREMENT, "
                 ." slider_id INT NOT NULL, "
-                ." slider_media_id varchar(255) NOT NULL,"
+                ." slider_media_id INT NOT NULL,"
                 ." created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
                 ." modified_on TIMESTAMP NOT NULL,"
                 ." PRIMARY KEY (slide_id)"

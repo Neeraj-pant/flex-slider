@@ -29,14 +29,22 @@ class FlexSlider
     }
 
 
+
+
+
     /*
      * Initilize Slider Configuration
      */
     public function fsInit()
     {
-        defined('FLEX_VERSION')     OR define('FLEX_VERSION', 1.0);
-        defined('FLEX_DIR_NAME')    OR define('FLEX_DIR_NAME', basename(__DIR__) );
+        defined('FLEX_VERSION')             OR define('FLEX_VERSION', 1.0);
+        defined('FLEX_DIR_NAME')            OR define('FLEX_DIR_NAME', basename(__DIR__) );
+        defined('FLEX_DUMMY_SLIDE_IMAGE')   OR define('FLEX_DUMMY_SLIDE_IMAGE', plugins_url(FLEX_DIR_NAME.'/images/default.png'));
     }
+
+
+
+
 
    /**
    * Initialize or create DB tables
@@ -45,6 +53,9 @@ class FlexSlider
 	require_once(plugin_dir_path( __FILE__ ).'lib/InstallDB.php');
 	$db_install = new InstallDB();
   }
+
+
+
 	
 	/**
 	* Include Library
@@ -56,18 +67,30 @@ class FlexSlider
 	}
 
 
+
+
+
 	public function fsInitDBObj(){
 		$this->database = new Database();
 	}
+
+
+
+
+
 
 	/**
 	* Creating Admin Menu Items
 	*/
 	public function fsCreateMenuItems()
 	{
-		add_menu_page('Flex Slider', 'Flex Slider', 'manage_options', 'slides_listing', array($this, 'fsSliderListing'), '', '66');
-		add_submenu_page('slides_listing', 'Add new Slider', 'Add New', 'manage_options', 'add_slides', array($this, 'fsAddSlider'));
+		add_menu_page('Flex Slider', __('Flex Slider'), 'manage_options', 'slides_listing', array($this, 'fsSliderListing'), '', '66');
+		add_submenu_page('slides_listing', __('Add new Slider'), 'Add New', 'manage_options', 'add_slides', array($this, 'fsAddSlider'));
 	}
+
+
+
+
 
 
 	/**
@@ -93,13 +116,73 @@ class FlexSlider
 
 
 
+
+
+
 	/*
 	* Add Slides Admin Menu Page
 	*/
 	public function fsAddSlider()
 	{
+		if(isset($_POST['save_slider'])){
+			$this->fsSaveSlider();
+		}
 		require_once(plugin_dir_path( __FILE__ ).'templates/add_slider.php');
 	}
+
+
+
+
+
+	/*
+	* Save Slider and Slides
+	*/
+	private function fsSaveSlider()
+	{
+		$slider['slider_name'] = $_POST['slider_name'];
+		$slider['slider_type'] = $_POST['slider_type'];
+		$slider_id = $this->database->saveSlider($slider);
+		if(!$slider_id)
+		{
+            ?>
+            <script type="text/javascript">display_alert(<?php _e( 'Error Occurred, some Sliders might not be Saved!' ); ?>, 'error');</script>
+            <?php
+		}
+		else
+		{
+			$slides = $_POST;
+			unset($slides['slider_name']);
+			unset($slides['slider_type']);
+			unset($slides['save_slider']);
+			$save_slides = $this->database->saveSlides($slides, $slider_id);
+            if($save_slides)
+            {
+                ?>
+                <script type="text/javascript">display_alert(<?php _e( 'Slider Saved Successfully!' ); ?>, 'success');</script>
+                <?php
+            }
+		}
+	}
+
+
+
+
+
+
+    /**
+     * Show Slider save message
+     */
+    public function fsSlideSaveNoticeSuccess()
+    {
+        ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php _e( 'Slider Saved Successfully!' ); ?></p>
+            </div>
+        <?php
+    }
+
+
+
 
 
 
@@ -110,16 +193,16 @@ class FlexSlider
 	{
         wp_register_style('flex-slider-style', plugins_url(FLEX_DIR_NAME.'/css/slider_base.css'), false, FLEX_VERSION);
         wp_enqueue_style('flex-slider-style');
-//        wp_register_style('flex-jquery-ui', plugins_url(FLEX_DIR_NAME.'/css/jquery-ui.min.css'), false, FLEX_VERSION);
-//        wp_enqueue_style('flex-jquery-ui');
-//
-//        wp_enqueue_script('flex-jquery-ui-js', plugins_url(FLEX_DIR_NAME.'/js/jquery-ui.min.js'));
+
+    	wp_enqueue_script('flex_elements_js', plugins_url(FLEX_DIR_NAME.'/js/flex_elements.js'), array('jquery-core'), FLEX_VERSION);
 	}
 
 }
 
 
-$plg = new FlexSlider();
+
+$flex = new FlexSlider();
+
 
 
 function dd($data){
@@ -128,6 +211,7 @@ function dd($data){
      echo "</pre>";
     die;
 }
+
 
 function d($data){
     echo "<pre>";

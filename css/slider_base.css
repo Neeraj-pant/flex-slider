@@ -10,12 +10,13 @@
     cursor: move;
     background-color: #e0e0e0;
     float: left;
-    height: 160px;
+    height: 130px;
     position: relative;
     margin: 10px;
-    width: 240px;
+    width: 160px;
     overflow: hidden;
 }
+
 .slides-wrapper a{
     text-decoration: none;
 }
@@ -56,13 +57,26 @@
     position: absolute;
     left: 0;
     top: 0;
-    height: 160px;
+    width: 100%;
+    height: 130px;
 }
 .delete-slide{
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 115, 170, 0.8);
+    color: #fff;
+    padding: 2px;
+    display: none;
 }
+.delete-slide span{
+    font-size: 18px;
+}
+.slides:hover .delete-slide{
+    display: block;
+    color: #fff;
+}
+
 .slider-type label{
     margin-right: 25px;
 }

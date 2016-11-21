@@ -6,9 +6,11 @@
 /**
  * Install bd and init classes
  */
-class InstallDB {
+class InstallDB 
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->initTables();
     }
 
@@ -16,7 +18,8 @@ class InstallDB {
     /**
     * Create DB Tables if not exists
     */
-    private function initTables(){
+    private function initTables()
+    {
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -55,7 +58,8 @@ class InstallDB {
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-        foreach($sql as $table){
+        foreach($sql as $table)
+        {
             dbDelta( $table );
         }
     }

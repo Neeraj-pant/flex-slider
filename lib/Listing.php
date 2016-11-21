@@ -100,7 +100,7 @@ class Listing extends WP_List_Table
         //Build row actions
         $actions = array(
             'edit'   => sprintf('<a href="?page=%s&action=%s&slider=%s">Edit</a>', $_REQUEST['page'], 'edit', $item->slider_id),
-            'delete' => sprintf('<a href="?page=%s&action=%s&slider=%s">Delete</a>', $_REQUEST['page'], 'delete', $item->slider_id),
+            'delete' => sprintf('<a href="?page=%s&action=%s&slider=%s&noheader=true">Delete</a>', $_REQUEST['page'], 'delete', $item->slider_id),
         );
 
         //Return the title contents
@@ -332,7 +332,7 @@ class Listing extends WP_List_Table
      **************************************************************************/
     function process_bulk_action()
     {
-
+        //dd($_REQUEST);
         //Detect when a bulk action is being triggered...
         if ('delete' === $this->current_action()) {
             wp_die('Items deleted (or they would be if we had items to delete)!');
@@ -352,37 +352,3 @@ class Listing extends WP_List_Table
 
 }
 
-
-/** *************************** RENDER TEST PAGE ********************************
- *******************************************************************************
- * This function renders the admin page and the example list table. Although it's
- * possible to call prepare_items() and display() from the constructor, there
- * are often times where you may need to include logic here between those steps,
- * so we've instead called those methods explicitly. It keeps things flexible, and
- * it's the way the list tables are used in the WordPress core.
- */
-function tt_render_list_page()
-{
-
-    //Create an instance of our package class...
-    $testListTable = new Listing();
-    //Fetch, prepare, sort, and filter our data...
-    $testListTable->prepare_items();
-
-    ?>
-    <div class="wrap">
-
-        <div id="icon-users" class="icon32"><br/></div>
-        <h2>Slides</h2>
-
-        <!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-        <form id="movies-filter" method="get">
-            <!-- For plugins, we also need to ensure that the form posts back to our current page -->
-            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>"/>
-            <!-- Now we can render the completed list table -->
-            <?php $testListTable->display() ?>
-        </form>
-
-    </div>
-    <?php
-}
